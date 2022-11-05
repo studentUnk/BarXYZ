@@ -131,8 +131,7 @@ class UserController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:255',
             'type_user' => 'required|string|max:255',
-            'sede' => 'required|string|max:255',
-            'password' => 'required|string|max:255' 
+            'sede' => 'required|string|max:255'
         ];
 
         $mensaje_e = [
@@ -142,6 +141,9 @@ class UserController extends Controller
         $this->validate($request, $campos, $mensaje_e);
 
         $datos_usuario = request()->except(['_token','_method']);
+
+        //$datos_usuario['password'] = Hash::make($datos_usuario['password']);
+
         User::where('id','=',$id)->update($datos_usuario);
 
         $user = User::findOrFail($id);

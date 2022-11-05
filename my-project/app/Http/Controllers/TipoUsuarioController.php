@@ -87,6 +87,6 @@ class TipoUsuarioController extends Controller
      * Obtener tipos de usuario disponibles
      */
     public function obtener_todo(){
-        return Tipo_usuario::all()->;
+        return Tipo_usuario::all();
     }
 }

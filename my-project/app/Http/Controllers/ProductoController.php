@@ -16,6 +16,8 @@ class ProductoController extends Controller
     public function index()
     {
         //
+        $datos['productos']=Producto::paginate(10);
+        return view('producto.indice_producto',$datos);
     }
 
     /**
@@ -26,6 +28,7 @@ class ProductoController extends Controller
     public function create()
     {
         //
+        return view('producto.crear_producto');
     }
 
     /**
@@ -37,6 +40,29 @@ class ProductoController extends Controller
     public function store(Request $request)
     {
         //
+        $campos = [
+            'nombre' => 'required|string|max:255',
+            'desripcion' => 'required|string|max:255'
+        ];
+
+        $mensaje_e = [
+            'required' => ':attribute es requerido'
+        ];
+
+        $this->validate($request, $campos, $mensaje_e);
+
+        $datos_usuario = request()->except('_token');
+        #$pwd = $datos_usuario['']
+        Producto::insert($datos_usuario); 
+        
+        /*User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);*/
+
+        #return response()->json($datos_usuario);
+        return redirect('producto')->with('mensaje_exitoso','Producto agregado con éxito');
     }
 
     /**
@@ -56,9 +82,12 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function edit(Producto $producto)
+    //public function edit(Producto $producto)
+    public function edit($id)
     {
         //
+        $producto = Producto::findOrFail($id);
+        return view("producto.editar_producto", compact('producto'));
     }
 
     /**
@@ -68,9 +97,30 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Producto $producto)
+    //public function update(Request $request, Producto $producto)
+    public function update(Request $request, $id)
     {
         //
+        $campos = [
+            'nombre' => 'required|string|max:255',
+            'desripcion' => 'required|string|max:255'
+        ];
+
+        $mensaje_e = [
+            'required' => ':attribute es requerido'
+        ];
+
+        $this->validate($request, $campos, $mensaje_e);
+
+        $datos_usuario = request()->except(['_token','_method']);
+
+        //$datos_usuario['password'] = Hash::make($datos_usuario['password']);
+
+        Producto::where('id','=',$id)->update($datos_usuario);
+
+        $producto = Producto::findOrFail($id);
+        #return view("administracion.editar_usuario", compact('user'));
+        return redirect("producto")->with('mensaje_exitoso','Producto actualizado exitosamente');
     }
 
     /**
@@ -79,9 +129,12 @@ class ProductoController extends Controller
      * @param  \App\Models\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Producto $producto)
+    //public function destroy(Producto $producto)
+    public function destroy($id)
     {
         //
+        Producto::destroy($id);
+        return redirect("producto")->with('mensaje_exitoso','Producto eliminado con éxito');
     }
 
     /**
@@ -96,5 +149,33 @@ class ProductoController extends Controller
             ->where([['inventarios.unidad','>',0],['inventarios.codigo_sede','=',$id_sede]])
             ->get();
         return $productos;
+    }
+
+    /**
+     * Obtener precio de un producto
+     */
+    public function precio_producto($codigo_producto)
+    {
+        //
+        $precio = Producto::select('precio')
+                    ->where('id',$codigo_producto)
+                    ->value('precio');
+        return $precio;
+    }
+
+    /**
+     * Obtener un unico producto en base al id
+     */
+    public function obtener_producto($id)
+    {
+        //
+        return Producto::findOrFail($id);
+    }
+
+    /**
+     * Obtener todos los productos disponibles
+     */
+    public function obtener_todo(){
+        return Producto::all();
     }
 }

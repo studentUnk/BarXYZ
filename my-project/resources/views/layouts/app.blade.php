@@ -38,14 +38,25 @@
                             @switch(Auth::user()->type_user)
                             @case(1)
                                 <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('pedido.index') }}">{{ __('Pedido')}}</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" href="{{ route('administracion.index') }}">{{ __('Empleado')}}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('pedido.index') }}">{{ __('Pedido')}}</a>
+                                    <a class="nav-link" href="{{ route('inventario.index') }}">{{ __('Inventario')}}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('reporte.index') }}">{{ __('Reporte')}}</a>
                                 </li>
                             @break
+                            
                             @case(2)
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('inventario.index') }}">{{ __('Inventario')}}</a>
+                                </li>
                             @break
+                            
                             @case(3)
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('pedido.index') }}">{{ __('Pedido')}}</a>

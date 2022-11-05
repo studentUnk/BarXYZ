@@ -4,7 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PedidoDetalleController;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\SedeController;
+use App\Http\Controllers\ReporteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +40,10 @@ Route::get('/administracion', function () {
 
 Route::resource('administracion',UserController::class)->middleware('auth'); # Acceder a todas las url de empleado controller
 Route::resource('pedido',PedidoController::class)->middleware('auth');
+Route::resource('pedido_detalle',PedidoDetalleController::class)->middleware('auth');
+Route::resource('inventario',InventarioController::class)->middleware('auth');
+Route::resource('producto',ProductoController::class)->middleware('auth');
+Route::resource('reporte',ReporteController::class)->middleware('auth');
 
 /*Route::get('/pedido', function () {
     return view('pedido.consultar_pedido');
@@ -65,3 +72,6 @@ Route::group(['middleware' => 'auth'], function(){
 });
 
 */
+
+Route::get('reporteInventarioDisponibleCSV', [\App\Http\Controllers\ReporteController::class,'reporteInventarioDisponibleCSV'])->name('reporteInventarioDisponibleCSV');
+Route::get('reporteInventarioDisponibleXLS', [\App\Http\Controllers\ReporteController::class,'reporteInventarioDisponibleXLS'])->name('reporteInventarioDisponibleXLS');

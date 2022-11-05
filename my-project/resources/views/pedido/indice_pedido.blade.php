@@ -2,11 +2,18 @@
 @section('content')
 
 <div class="container">
+
+@if(Session::has('mensaje_exitoso'))
+<div class="alert alert-success" role="alert">
+{{ Session::get('mensaje_exitoso') }}
+<br><br>
+</div>
+@endif
+
 <form action="{{ url('/pedido' ) }}" method="post" class="d-inline">
     @csrf
     <label for="codigo_combo"> Seleccionar mesa disponible para creacion de nuevo pedido</label>
-    <select class="form-select" name="codigo_mesa" id="codigo_mesa">
-        <option value="-1">------</option>
+    <select class="form-select" name="codigo_mesa" id="codigo_mesa">    
         @foreach($mesas as $mesa)
                 <option value="{{ $mesa->id}}">{{ $mesa->numero_mesa }}</option>
         @endforeach

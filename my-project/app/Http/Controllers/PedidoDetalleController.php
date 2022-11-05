@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pedido_detalle;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\InventarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -80,9 +82,13 @@ class PedidoDetalleController extends Controller
      * @param  \App\Models\Pedido_detalle  $pedido_detalle
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pedido_detalle $pedido_detalle)
+    //public function destroy(Pedido_detalle $pedido_detalle)
+    public function destroy($id)
     {
         //
+        Pedido_detalle::destroy($id);
+        return redirect("pedido")->with('mensaje_exitoso','Detalle del pedido eliminado con éxito');
+        //return view('detalle_pedido/test');
     }
 
     /**
@@ -92,8 +98,32 @@ class PedidoDetalleController extends Controller
     {
         //
         $pedido_detalle = DB::table('pedido_detalles')
+            ->leftJoin('productos', [['productos.id', '=', 'pedido_detalles.codigo_producto']])
+            ->select('pedido_detalles.*','productos.nombre', 'productos.desripcion')
             ->where('codigo_pedido','=',$codigo_pedido)
             ->get();
+
         return $pedido_detalle;
+    }
+
+    /**
+     * Insertar pedido detalle asociado a un pedido
+     */
+    public function insertar_detalle_de_pedido($data)
+    {
+        //
+        $productoController = new ProductoController();
+        $inventarioController = new InventarioController();
+
+        //$precio = $productoController->precio_producto($data['codigo_producto']);
+        $precio = $inventarioController->precio_producto($data['codigo_producto']);
+
+        DB::table('pedido_detalles')->insert([
+            'codigo_pedido' => $data['pedido'],
+            'codigo_producto' => $data['codigo_producto'] == -1 ? null : $data['codigo_producto'],
+            'codigo_combo' => $data['codigo_combo'] == -1 ? null : $data['codigo_combo'],
+            'cantidad' => $data['cantidad'],
+            'precio' => ($precio*$data['cantidad'])
+        ]);
     }
 }

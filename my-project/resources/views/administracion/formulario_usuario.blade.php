@@ -24,17 +24,19 @@
 <div class="row">
 <div class="col">
     <label for="email"> Correo </label>
-    <input type="text" name="email" id="email" value="{{ isset($user->email)?$user->email:old('email')  }}" class="form-control">
+    <input type="email" name="email" id="email" value="{{ isset($user->email)?$user->email:old('email')  }}" class="form-control">
 </div>
 <div class="col">
     <label for="phone"> Telefono </label>
-    <input type="text" name="phone" id="phone" value="{{ isset($user->phone)?$user->phone:old('phone')  }}" class="form-control">
+    <input type="number" name="phone" id="phone" value="{{ isset($user->phone)?$user->phone:old('phone')  }}" class="form-control">
 </div>
 </div>
+@if( $fuente == 'Crear' )
 <div class="row">
 <label for="password"> Contraseña </label>
     <input type="password" name="password" id="password" value="{{ isset($user->password)?$user->password:old('password')  }}" class="form-control">
 </div>
+@endif
     <div class="row">
     <div class="col">
         <label for="type_user"> Tipo de usuario </label>

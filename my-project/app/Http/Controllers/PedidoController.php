@@ -6,6 +6,7 @@ use App\Models\Pedido;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PedidoDetalleController;
+use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\MesasController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,8 +41,9 @@ class PedidoController extends Controller
         //
         $sede = Auth::user()->sede;
         $productoController = new ProductoController();
+        $inventarioController = new InventarioController();
         $comboController = new ComboController();
-        $productos = $productoController->productos_sede($sede);
+        $productos = $inventarioController->productos_sede($sede);
         $combos = $comboController->combos_disponibles($sede);
 
         //return view('administracion.crear_usuario', compact('tipos_usuario','sedes'));
@@ -75,12 +77,14 @@ class PedidoController extends Controller
         $pedido = $pedidoController->buscar_pedido_mesa($datos_r['codigo_mesa']);
 
         $productoController = new ProductoController();
+        $inventarioController = new InventarioController();
         $comboController = new ComboController();
         $pedidoDetalleController = new PedidoDetalleController();
-        $productos = $productoController->productos_sede($sede);
+        $productos = $inventarioController->productos_sede($sede);
         $combos = $comboController->combos_disponibles($sede);
 
         $detalle_pedidos = $pedidoDetalleController->obtener_detalle_de_pedido($pedido[0]->id); // codigo pedido
+        $pedido = $pedido[0]->id;
 
         //return view('administracion.crear_usuario', compact('tipos_usuario','sedes'));
 
@@ -128,9 +132,10 @@ class PedidoController extends Controller
         //$pedido = $pedidoController->buscar_pedido_mesa($datos_r['codigo_mesa']);
 
         $productoController = new ProductoController();
+        $inventarioController = new InventarioController();
         $comboController = new ComboController();
         $pedidoDetalleController = new PedidoDetalleController();
-        $productos = $productoController->productos_sede($sede);
+        $productos = $inventarioController->productos_sede($sede);
         $combos = $comboController->combos_disponibles($sede);
 
         $detalle_pedidos = $pedidoDetalleController->obtener_detalle_de_pedido($pedido); // codigo pedido
@@ -146,9 +151,41 @@ class PedidoController extends Controller
      * @param  \App\Models\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pedido $pedido)
+    //public function update(Request $request, Pedido $pedido)
+    public function update(Request $request)
     {
         //
+        $datos_r = request();
+        $pedidoDetalleController = new PedidoDetalleController();
+        $pedidoDetalleController->insertar_detalle_de_pedido($datos_r);
+        
+
+        $pedidoController = new PedidoController();
+
+        //$datos_r = request();
+        $sede = Auth::user()->sede;
+        $mesero = Auth::user()->id;
+        /*DB::table('pedidos')->insert([
+            'usuario_mesero' => $mesero,
+            'codigo_mesa' => $datos_r['codigo_mesa'],
+            'codigo_sede' => $sede,
+            'activo' => 'Y',
+            'valor_venta' => 0
+        ]);*/
+
+        $pedido = $datos_r['pedido'];
+
+        $productoController = new ProductoController();
+        $inventarioController = new InventarioController();
+        $comboController = new ComboController();
+        $pedidoDetalleController = new PedidoDetalleController();
+        $productos = $inventarioController->productos_sede($sede);
+        $combos = $comboController->combos_disponibles($sede);
+
+        $detalle_pedidos = $pedidoDetalleController->obtener_detalle_de_pedido($pedido); // codigo pedido
+
+        return view('pedido.crear_pedido', compact('productos','combos','sede','pedido','detalle_pedidos'));
+        //return view('pedido.test_me', compact('datos_r'));
     }
 
     /**
@@ -157,9 +194,12 @@ class PedidoController extends Controller
      * @param  \App\Models\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pedido $pedido)
+    //public function destroy(Pedido $pedido)
+    public function destroy($id)
     {
         //
+        Pedido::destroy($id);
+        return redirect("pedido")->with('mensaje_exitoso','Pedido eliminado con éxito');
     }
 
     /**
@@ -173,5 +213,27 @@ class PedidoController extends Controller
             ->where('activo','=','Y')
             ->get();
         return $pedido;
+    }
+
+    /**
+     * Obtener registro de todos los productos vendidos
+     */
+    public function obtenerProductosVendidos()
+    {
+        //
+        $productos = DB::table('pedidos')
+            ->join('sedes', [['sedes.id', '=', 'pedidos.codigo_sede']])
+            ->join('pedido_detalles', [['pedido_detalles.codigo_pedido', '=', 'pedidos.id']])
+            ->join('productos', [['productos.id', '=', 'pedido_detalles.codigo_producto']])
+            ->select('pedidos.codigo_sede', 
+                    'pedido_detalles.codigo_producto',
+                    'productos.nombre AS nombre_producto',
+                    'productos.desripcion AS descripcion_producto',
+                    'sedes.nombre AS nombre_sede',
+                    'pedido_detalles.cantidad AS unidades_disponibles',
+                    'pedido_detalles.precio')
+            ->where([['pedidos.activo','!=','Y']])        
+            ->get();
+        return $productos;
     }
 }

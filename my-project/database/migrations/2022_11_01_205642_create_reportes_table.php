@@ -13,14 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('inventarios', function (Blueprint $table) {
+        Schema::create('reportes', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('codigo_sede')->nullable();
-            $table->bigInteger('codigo_producto')->nullable();
-            $table->bigInteger('usuario_ingreso')->nullable();
-            $table->integer('unidad')->nullable();
-            $table->double('precio')->nullable();
-            $table->dateTime('fecha_registro')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inventarios');
+        Schema::dropIfExists('reportes');
     }
 };

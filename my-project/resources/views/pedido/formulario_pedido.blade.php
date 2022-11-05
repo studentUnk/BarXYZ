@@ -11,11 +11,12 @@
     </div>
 @endif
 
+<input id="pedido" name="pedido" type="hidden" value="{{ $pedido }}">
+
 <div class="row">
     <div class="col">
         <label for="codigo_producto"> Producto (nombre->precio) </label>
         <select class="form-select" name="codigo_producto" id="codigo_producto">
-            <option value="-1">------</option>
             @foreach($productos as $producto)
                 <option value="{{ $producto->id}}">{{ $producto->nombre }} -> ${{ $producto->precio}}</option>
             @endforeach
@@ -25,7 +26,6 @@
 <div class="col">
     <label for="codigo_combo"> Combo (nombre->precio) </label>
     <select class="form-select" name="codigo_combo" id="codigo_combo">
-        <option value="-1">------</option>
         @foreach($combos as $combo)
                 <option value="{{ $combo->id}}">{{ $combo->nombre }} -> ${{ $combo->precio}}</option>
         @endforeach
@@ -34,8 +34,8 @@
 </div>
 <div class="row">
 <div class="col">
-    <label for="name"> Cantidad </label>
-    <input type="text" name="name" id="name" value="{{ isset($user->name)?$user->name:old('name') }}" class="form-control">
+    <label for="cantidad"> Cantidad </label>
+    <input type="number" name="cantidad" id="cantidad" class="form-control">
 </div>
 </div>
 <br><br>
