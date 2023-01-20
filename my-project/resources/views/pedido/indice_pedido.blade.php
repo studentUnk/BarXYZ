@@ -48,7 +48,15 @@
                 @csrf
                 {{ method_field("delete") }}
                 <input type="submit" onclick="return confirm('¿Esta seguro de eliminar el registro?')" value="Eliminar" class="btn btn-danger">
-            </form>       
+            </form>
+            @if(Auth::user()->type_user === '1' or Auth::user()->type_user === '2')
+            |
+            <form action="{{ url('/pedido_detalle/'.$pedido->id ) }}" method="post" class="d-inline">
+                @csrf
+                {{ method_field("put") }}
+                <input type="submit" onclick="return confirm('¿Marcar como pagado el pedido?')" value="Pagar" class="btn btn-success">
+            </form>
+            @endif
             </td>
         </tr>
         @endforeach

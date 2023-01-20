@@ -55,6 +55,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('inventario.index') }}">{{ __('Inventario')}}</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('pedido.index') }}">{{ __('Pedido')}}</a>
+                                </li>
                             @break
                             
                             @case(3)

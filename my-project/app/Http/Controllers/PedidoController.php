@@ -236,4 +236,30 @@ class PedidoController extends Controller
             ->get();
         return $productos;
     }
+
+    // Calcular ventas por fecha
+    public function obtenerProductosVendidosFecha()
+    {
+        //
+        $productos = DB::table('pedidos')
+            ->join('sedes', [['sedes.id', '=', 'pedidos.codigo_sede']])
+            ->select('pedidos.codigo_sede', 
+                    'sedes.nombre AS nombre_sede',
+                    DB::raw('sum(pedidos.valor_venta) AS venta_total'),
+                    DB::raw('date(pedidos.fecha_pago) AS fecha'))
+            ->where([['pedidos.activo','!=','Y']])
+            ->groupBY('pedidos.codigo_sede','sedes.nombre',DB::raw('date(pedidos.fecha_pago)')) 
+            ->get();
+        return $productos;
+    }
+
+    /**
+     * Actualizar como pago un pedido
+     */
+    public function actualizarPedidoPago($pedido,$cajero)
+    {
+        //
+        Pedido::where('id',$pedido)
+            ->update(['usuario_cajero' => $cajero, 'activo' => 'N']);
+    }
 }

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Pedido_detalle;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\InventarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PedidoDetalleController extends Controller
 {
@@ -39,7 +41,7 @@ class PedidoDetalleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -71,9 +73,26 @@ class PedidoDetalleController extends Controller
      * @param  \App\Models\Pedido_detalle  $pedido_detalle
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pedido_detalle $pedido_detalle)
+    //public function update(Request $request, Pedido_detalle $pedido_detalle)
+    //public function update(Request $request)
+    public function update($pedido)
     {
-        //
+                // Actualizar pago de un pedido a pagado
+                $datos_r = request();
+                $pedidoController = new PedidoController();
+        
+                //$sede = Auth::user()->sede;
+                $cajero = Auth::user()->id;
+                /*DB::table('pedidos')->insert([
+                    'usuario_mesero' => $mesero,
+                    'codigo_mesa' => $datos_r['codigo_mesa'],
+                    'codigo_sede' => $sede,
+                    'activo' => 'Y',
+                    'valor_venta' => 0
+                ]);*/
+                //$pedido = $datos_r['pedido'];
+                $pedidoController->actualizarPedidoPago($pedido,$cajero);
+                return redirect("pedido")->with('mensaje_exitoso','Pedido ha sido pagado con éxito');
     }
 
     /**

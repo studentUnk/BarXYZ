@@ -69,6 +69,19 @@ class ReporteController extends Controller
                 }
                 break;
             case 'reportVtaFech':
+                if($data['tipoArchivo'] == 'csv'){
+                    //return view('reporte.indice_reporte');
+                    $nombreArchivo = "ventas_x_fecha.csv";
+                    $nombreArchivoPath = public_path("files/" . $nombreArchivo);
+                    $headers = array('Content-type' => 'text/csv');
+                    $this->reporteInventarioDisponibleCSV($data['reportes'], $nombreArchivo);
+
+                    return Response::download($nombreArchivoPath, $nombreArchivo, $headers);
+                }
+                else{
+                    $nombreArchivo = "ventas_x_fecha.xls";
+                    $this->reporteInventarioDisponibleXLS($data['reportes'],$nombreArchivo);
+                }
                 break;
         }
 
@@ -183,7 +196,10 @@ class ReporteController extends Controller
                 return $header;
             case 'reportVtaFech':
                 $header = [
-                    "hola"
+                    "Codigo sede",
+                    "Sede",
+                    "Total venta",
+                    "Fecha"
                 ];
                 return $header;
         }
@@ -249,6 +265,15 @@ class ReporteController extends Controller
                 };
                 break;
             case 'reportVtaFech':
+                $data = $pedidoController->obtenerProductosVendidosFecha();
+                foreach ($data as $d){
+                    fputcsv($handle, [
+                        $d->codigo_sede,
+                        $d->nombre_sede,
+                        $d->venta_total,
+                        $d->fecha
+                    ]);                    
+                };
                 break;
 
         }
@@ -321,6 +346,15 @@ class ReporteController extends Controller
                 };
                 break;
             case 'reportVtaFech':
+                $data = $pedidoController->obtenerProductosVendidosFecha();
+                foreach ($data as $d) {
+                    $data_array [] = array(
+                        "Codigo sede" => $d->codigo_sede,
+                        "Sede" => $d->nombre_sede,
+                        "Total venta" => $d->venta_total,
+                        "Fecha" => $d->fecha               
+                    );
+                };
                 break;
         }
 

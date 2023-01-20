@@ -1,4 +1,4 @@
 "Codigo sede","Codigo producto",Usuario,"Nombre producto","Descripcion producto",Sede,"Unidades disponibles",Precio,"Valor total"
-1,1,1,"Cerveza Light AGUILA LIGHT 1980 ml","AGUILA LIGHT Cerveza Light AGUILA LIGHT 1980 ml ","Calle 85",1100,2005,2205500
-1,2,1,"COSTENA CERVEZA COSTENA 1980 ml ","COSTENA CERVEZA COSTENA 1980 ml ","Calle 85",1000,2500,2500000
-1,1,1,"Cerveza Light AGUILA LIGHT 1980 ml","AGUILA LIGHT Cerveza Light AGUILA LIGHT 1980 ml ","Calle 85",1000,3500,3500000
+1,1,1,"Cerveza Light AGUILA LIGHT 1980 ml","AGUILA LIGHT Cerveza Light AGUILA LIGHT 1980 ml ","Calle 85",1000,2005,2005000
+1,2,1,"COSTENA CERVEZA COSTENA 1980 ml ","COSTENA CERVEZA COSTENA 1980 ml ","Calle 85",984,2500,2460000
+1,4,2,"Cerveza Artesanal 1100 ml","Cerveza preparada en casa","Calle 85",1440,5553,7996320
